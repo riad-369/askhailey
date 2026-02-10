@@ -23,16 +23,18 @@
 </audio>
 
 <style>
-/* Your existing CSS here */
+/* Keep your existing CSS here */
+/* Example: page styling, stars, animations, buttons, hearts, etc. */
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:'Georgia', serif; overflow-x:hidden; background:#0f0f1e; }
 .page { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; position:relative; opacity:0; transition:opacity 1s ease; }
 .page.active { opacity:1; }
 .page.hidden { display:none; }
-/* stars, page colors, animations, hearts, buttons, etc. */
 </style>
 </head>
 <body>
+
+<!-- STARS -->
 <div class="stars" id="stars"></div>
 
 <!-- PAGE 1 -->
@@ -40,51 +42,45 @@ body { font-family:'Georgia', serif; overflow-x:hidden; background:#0f0f1e; }
     <div class="welcome-content">
         <h1>Hey qt 💕</h1>
         <p>Made something for you</p>
-        <button class="start-btn">👀</button>
+        <button id="startBtn" class="start-btn">👀</button>
     </div>
 </div>
 
 <!-- PAGE 2 -->
-<div id="page2" class="page">
+<div id="page2" class="page hidden">
     <div class="distance-content">
         <div class="globe"></div>
         <h2>Two Islands 🏝️</h2>
         <div class="connecting-line"></div>
-        <div style="margin:30px 0;">
-            <img id="meme2" style="max-width:300px; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.3);" alt="Long distance meme">
-        </div>
+        <img id="meme2" style="max-width:300px; border-radius:15px;" alt="Long distance meme">
         <p>Different time zones... But you're always on my mind 💭</p>
-        <button class="start-btn">→</button>
+        <button class="nextBtn start-btn">→</button>
     </div>
 </div>
 
 <!-- PAGE 3 -->
-<div id="page3" class="page">
+<div id="page3" class="page hidden">
     <div class="hearts-content">
         <h2>Why I like you 😍</h2>
-        <div style="margin:20px 0;">
-            <img id="meme3" style="max-width:250px; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.3);" alt="Feelings meme">
-        </div>
+        <img id="meme3" style="max-width:250px; border-radius:15px;" alt="Feelings meme">
         <p>Click the hearts 👇</p>
         <div class="heart-container">
-            <div class="heart" onclick="clickHeart(this)" title="Your smile ☀️">❤️</div>
-            <div class="heart" onclick="clickHeart(this)" title="The way you dance 💃">💖</div>
-            <div class="heart" onclick="clickHeart(this)" title="Your laugh 🎵">💕</div>
-            <div class="heart" onclick="clickHeart(this)" title="Your cooking 🍽️">💗</div>
-            <div class="heart" onclick="clickHeart(this)" title="You get my jokes 🗣️">💓</div>
-            <div class="heart" onclick="clickHeart(this)" title="Everything about you 🌅">💝</div>
+            <div class="heart" onclick="clickHeart(this)">❤️</div>
+            <div class="heart" onclick="clickHeart(this)">💖</div>
+            <div class="heart" onclick="clickHeart(this)">💕</div>
+            <div class="heart" onclick="clickHeart(this)">💗</div>
+            <div class="heart" onclick="clickHeart(this)">💓</div>
+            <div class="heart" onclick="clickHeart(this)">💝</div>
         </div>
-        <button class="next-btn" id="nextBtn" onclick="goToPage(4)">→</button>
+        <button id="nextBtnPage3" class="next-btn">→</button>
     </div>
 </div>
 
 <!-- PAGE 4 -->
-<div id="page4" class="page">
+<div id="page4" class="page hidden">
     <div class="question-content">
         <div class="big-heart">💖</div>
-        <div style="margin:20px 0;">
-            <img id="meme4" style="max-width:300px; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.3);" alt="Asking out meme">
-        </div>
+        <img id="meme4" style="max-width:300px; border-radius:15px;" alt="Asking out meme">
         <h2>¿Quieres ser mi Valentine?</h2>
         <p class="message">So... what do you say? 😏</p>
         <div class="answer-buttons">
@@ -95,13 +91,11 @@ body { font-family:'Georgia', serif; overflow-x:hidden; background:#0f0f1e; }
 </div>
 
 <!-- PAGE 5 -->
-<div id="page5" class="page">
+<div id="page5" class="page hidden">
     <div class="celebration-content">
         <h2>🎉 WEPAAA! 🎉</h2>
         <p>¡You just made me the happiest man alive! 😍</p>
-        <div style="margin:30px 0;">
-            <img id="meme5" style="max-width:350px; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.3);" alt="Celebration meme">
-        </div>
+        <img id="meme5" style="max-width:350px; border-radius:15px;" alt="Celebration meme">
     </div>
 </div>
 
@@ -121,47 +115,35 @@ function createStars() {
     }
 }
 
-// ===== AUDIO HANDLING =====
+// ===== AUDIO =====
 let userInteracted = false;
+const audios = [
+    document.getElementById('audio1'),
+    document.getElementById('audio2'),
+    document.getElementById('audio3'),
+    document.getElementById('audio4'),
+    document.getElementById('audio5')
+];
 
-// Attach first click event for starting audio
-document.querySelectorAll('.start-btn').forEach(btn=>{
-    btn.addEventListener('click', (e)=>{
-        if(!userInteracted){
-            userInteracted = true;
-            const page1Audio = document.getElementById('audio1');
-            if(page1Audio) page1Audio.play().catch(err=>console.log(err));
-        }
-        // Determine which page to go next
-        const currentPage = e.target.closest('.page');
-        if(currentPage.id==='page1') goToPage(2);
-        else if(currentPage.id==='page2') goToPage(3);
-    });
-});
+function stopAllAudio() {
+    audios.forEach(a=>{ if(a){ a.pause(); a.currentTime=0; } });
+}
 
-// Go to page function
-function goToPage(pageNum){
+function goToPage(pageNum) {
+    stopAllAudio();
     const pages = document.querySelectorAll('.page');
-    // Stop all audio
-    for(let i=1;i<=5;i++){
-        const audio = document.getElementById(`audio${i}`);
-        if(audio){ audio.pause(); audio.currentTime=0; }
-    }
-
     pages.forEach(p=>p.classList.remove('active'));
     setTimeout(()=>{
         pages.forEach(p=>p.classList.add('hidden'));
-        const targetPage = document.getElementById(`page${pageNum}`);
+        const targetPage = document.getElementById('page'+pageNum);
         targetPage.classList.remove('hidden');
         setTimeout(()=>{
             targetPage.classList.add('active');
-            // Play audio if user interacted
-            const audio = document.getElementById(`audio${pageNum}`);
-            if(audio && audio.src && userInteracted){
-                audio.play().catch(err=>console.log('Audio play failed:', err));
+            if(userInteracted && audios[pageNum-1]){
+                audios[pageNum-1].play().catch(err=>console.log(err));
             }
         },50);
-    },1000);
+    },500);
 }
 
 // ===== HEARTS =====
@@ -171,62 +153,41 @@ function clickHeart(h){
         h.classList.add('clicked');
         clickedHearts++;
         if(clickedHearts===6){
-            document.getElementById('nextBtn').classList.add('visible');
+            document.getElementById('nextBtnPage3').classList.add('visible');
         }
     }
 }
 
 // ===== NO BUTTON =====
-let noButtonMoved=false;
 function runAway(btn){
     const maxX = window.innerWidth - btn.offsetWidth - 50;
     const maxY = window.innerHeight - btn.offsetHeight - 50;
-    const randomX = Math.max(50, Math.random()*maxX);
-    const randomY = Math.max(50, Math.random()*maxY);
+    const x = Math.max(50, Math.random()*maxX);
+    const y = Math.max(50, Math.random()*maxY);
     btn.style.position='fixed';
-    btn.style.left=randomX+'px';
-    btn.style.top=randomY+'px';
+    btn.style.left=x+'px';
+    btn.style.top=y+'px';
     btn.style.transition='all 0.2s ease';
-    if(!noButtonMoved){ noButtonMoved=true; btn.textContent="No? 🤨"; }
-    else{ btn.style.fontSize='0.8em'; btn.style.padding='8px 20px'; btn.textContent="Segura? 🥺"; }
 }
 
 // ===== YES BUTTON =====
 function sayYes(){
-    for(let i=1;i<=4;i++){
-        const audio = document.getElementById(`audio${i}`);
-        if(audio){ audio.pause(); audio.currentTime=0; }
-    }
-    const celebrationAudio = document.getElementById('audio5');
-    if(celebrationAudio && userInteracted) celebrationAudio.play().catch(err=>console.log(err));
-    document.getElementById('page5').style.display='flex';
+    stopAllAudio();
+    if(userInteracted && audios[4]) audios[4].play().catch(err=>console.log(err));
+    document.getElementById('page5').classList.remove('hidden');
     goToPage(5);
-    createConfetti();
-}
-
-// ===== CONFETTI =====
-function createConfetti(){
-    const colors=['#ff6e7f','#bfe9ff','#ffecd2','#fcb69f','#fa709a','#fee140'];
-    for(let i=0;i<100;i++){
-        setTimeout(()=>{
-            const confetti=document.createElement('div');
-            confetti.style.position='fixed';
-            confetti.style.width='10px';
-            confetti.style.height='10px';
-            confetti.style.background=colors[Math.floor(Math.random()*colors.length)];
-            confetti.style.left=Math.random()*100+'%';
-            confetti.style.top='-10px';
-            confetti.style.borderRadius = Math.random()>0.5?'50%':'0';
-            confetti.style.animation=`confetti-fall ${2+Math.random()*2}s linear forwards`;
-            confetti.style.zIndex='1000';
-            document.body.appendChild(confetti);
-            setTimeout(()=>confetti.remove(),4000);
-        }, i*30);
-    }
 }
 
 // ===== INIT =====
 createStars();
+
+// ===== BUTTON EVENTS =====
+document.getElementById('startBtn').addEventListener('click', ()=>{
+    userInteracted=true;
+    if(audios[0]) audios[0].play().catch(err=>console.log(err));
+    goToPage(2);
+});
+document.querySelector('.nextBtn.start-btn').addEventListener('click', ()=>goToPage(3));
 
 // ===== MEMES (replace with your URLs) =====
 document.getElementById('meme2').src='bad_b.jpg';
@@ -234,5 +195,6 @@ document.getElementById('meme3').src='feelings_meme.jpg';
 document.getElementById('meme4').src='asking_meme.jpg';
 document.getElementById('meme5').src='celebration_meme.jpg';
 </script>
+
 </body>
 </html>
